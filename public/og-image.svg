@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#FAF9F0"/>
+  <rect x="40" y="40" width="1120" height="550" rx="40" fill="#FFFFFF" stroke="#8E9162" stroke-width="6"/>
+  <rect x="90" y="95" width="110" height="110" rx="28" fill="#6A795D"/>
+  <path d="M132 128L168 150L132 172V128Z" fill="#FAF9F0"/>
+  <rect x="230" y="110" width="420" height="44" rx="22" fill="#D9D28B"/>
+  <text x="255" y="139" fill="#2C3527" font-family="system-ui, sans-serif" font-size="22" font-weight="800">100% LOCAL WEBASSEMBLY ENGINE</text>
+  <text x="90" y="295" fill="#2C3527" font-family="system-ui, sans-serif" font-size="68" font-weight="900">MOV to MP4 Converter</text>
+  <text x="90" y="365" fill="#6A795D" font-family="system-ui, sans-serif" font-size="34" font-weight="700">1-Second Lossless Stream Copy (-c copy) • Zero Server Uploads</text>
+  <rect x="90" y="430" width="310" height="76" rx="38" fill="#6A795D"/>
+  <text x="140" y="478" fill="#FAF9F0" font-family="system-ui, sans-serif" font-size="28" font-weight="800">MOV ↔ MP4</text>
+  <rect x="425" y="430" width="380" height="76" rx="38" fill="#B2BD7E"/>
+  <text x="465" y="478" fill="#2C3527" font-family="system-ui, sans-serif" font-size="28" font-weight="800">Works 100% Offline</text>
+</svg>

@@ -1,0 +1,346 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import { localeList, type Locale, getTranslations, getLocalePath } from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getTranslations(lang);
+const siteOrigin = 'https://mov-to-mp4.github.io';
+const canonicalUrl = `${siteOrigin}${getLocalePath(lang)}`;
+const ogImageUrl = `${siteOrigin}/og-image.svg`;
+
+// 1. WebApplication Schema (100% Google Safe Search & Rich Snippet compliant — NO fake ratings/reviews)
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: t.hero.title,
+  url: canonicalUrl,
+  description: t.meta.description,
+  inLanguage: lang,
+  applicationCategory: 'MultimediaApplication',
+  operatingSystem: 'Windows, macOS, iOS, Android, Linux',
+  browserRequirements: 'Requires HTML5 / WebAssembly',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  featureList: [
+    '1-Second Lossless MOV to MP4 Stream Remuxing (-c copy)',
+    'Bidirectional MP4 to MOV Converter',
+    'Max Compatibility H.264 + AAC Video Compression',
+    '100% Client-Side Privacy with Zero Server Uploads',
+    'Offline Progressive Web App (PWA) Support',
+  ],
+};
+
+// 2. BreadcrumbList Schema dynamically matching current language path
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: t.breadcrumbs.home,
+      item: `${siteOrigin}/`,
+    },
+    ...(lang !== 'en'
+      ? [
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: t.breadcrumbs.converter,
+            item: canonicalUrl,
+          },
+        ]
+      : [
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: t.breadcrumbs.converter,
+            item: canonicalUrl,
+          },
+        ]),
+  ],
+};
+
+// 3. FAQPage Schema dynamically populated from the 8-language FAQ array
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: t.faq.items.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+};
+---
+
+<!doctype html>
+<html lang={lang} class="scroll-smooth">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-H78DVCSHGM"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-H78DVCSHGM');
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <meta name="keywords" content={t.meta.keywords} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <!-- Self-Referencing Canonical Tag -->
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- PWA & Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icon-192.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#6A795D" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="MOV to MP4" />
+
+    <!-- Full Bidirectional Hreflang Matrix (8 Locales + x-default) -->
+    {
+      localeList.map((loc) => (
+        <link
+          rel="alternate"
+          hreflang={loc}
+          href={`${siteOrigin}${getLocalePath(loc)}`}
+        />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={`${siteOrigin}/`} />
+
+    <!-- Open Graph Metadata -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MOV to MP4 Converter" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={t.meta.ogLocale} />
+
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={t.meta.title} />
+    <meta name="twitter:description" content={t.meta.description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- JSON-LD Structured Data Schemas (WebApplication, BreadcrumbList, FAQPage) -->
+    <script type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+    <!-- Flash-free Theme Initialization (Default: Light Mode #FAF9F0) -->
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          if (saved === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body
+    class="min-h-screen flex flex-col bg-bgPrimary text-textPrimary antialiased selection:bg-[#D9D28B] selection:text-[#2C3527]"
+    data-offline-ready-msg={t.toasts.offlineReady}
+  >
+    <Header lang={lang} />
+
+    <main id="main-content" class="flex-1">
+      <slot />
+    </main>
+
+    <footer class="border-t-2 border-borderTheme/40 bg-workspaceBg py-8 px-4 sm:px-6">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-textSecondary font-medium">
+        <div class="text-center sm:text-left">
+          <p class="font-extrabold text-textPrimary">{t.footer.tagline}</p>
+          <p class="text-xs mt-0.5">{t.footer.privacyNote}</p>
+        </div>
+        <p class="text-xs font-semibold">{t.footer.copyright}</p>
+      </div>
+    </footer>
+
+    <!-- Clean 1-Step Visual PWA Install Modal (iOS Safari "Tap Share -> Add to Home Screen" & Desktop Fallback) -->
+    <div
+      id="pwa-install-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="pwa-modal-title"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+    >
+      <div class="w-full max-w-lg rounded-[2rem] bg-workspaceBg border-2 border-borderTheme shadow-2xl p-6 sm:p-8 text-textPrimary space-y-5 animate-pulseSoft" style="animation-iteration-count: 1;">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-btnPrimary text-btnPrimaryText flex items-center justify-center shrink-0">
+              <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                <path d="M12 18h.01" />
+                <path d="M12 8v6" />
+                <path d="m9 11 3 3 3-3" />
+              </svg>
+            </div>
+            <div>
+              <h2 id="pwa-modal-title" class="text-xl font-extrabold leading-tight">
+                {t.pwaModal.title}
+              </h2>
+              <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-bgSurface text-[#2C3527] dark:text-[#D9D28B] border border-borderTheme">
+                {t.pwaModal.offlineBadge}
+              </span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            id="pwa-modal-close-icon"
+            aria-label={t.pwaModal.closeBtn}
+            class="w-10 h-10 rounded-xl bg-bgPrimary hover:bg-bgSurface/60 border border-borderTheme flex items-center justify-center font-extrabold text-lg transition-colors"
+          >
+            ×
+          </button>
+        </div>
+
+        <p class="text-sm sm:text-base text-textSecondary leading-relaxed">
+          {t.pwaModal.subtitle}
+        </p>
+
+        <!-- iOS Safari Visual Guide Card -->
+        <div class="rounded-2xl bg-bgPrimary border-2 border-borderTheme/70 p-4 space-y-1.5">
+          <div class="flex items-center gap-2 font-extrabold text-base text-textPrimary">
+            <svg class="w-5 h-5 text-btnPrimary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+              <polyline points="16 6 12 2 8 6" />
+              <line x1="12" y1="2" x2="12" y2="15" />
+            </svg>
+            <span>{t.pwaModal.iosStepTitle}</span>
+          </div>
+          <p class="text-sm text-textSecondary font-medium">
+            {t.pwaModal.iosStepDesc}
+          </p>
+        </div>
+
+        <!-- Desktop / Android Guide Card -->
+        <div class="rounded-2xl bg-bgPrimary border border-borderTheme/50 p-4 space-y-1.5">
+          <div class="flex items-center gap-2 font-extrabold text-base text-textPrimary">
+            <svg class="w-5 h-5 text-btnPrimary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+            <span>{t.pwaModal.desktopStepTitle}</span>
+          </div>
+          <p class="text-sm text-textSecondary font-medium">
+            {t.pwaModal.desktopStepDesc}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          id="pwa-modal-close-btn"
+          aria-label={t.pwaModal.closeBtn}
+          class="w-full py-3.5 px-6 rounded-full bg-btnPrimary hover:bg-btnPrimaryHover text-btnPrimaryText font-extrabold text-base shadow-md transition-all"
+        >
+          {t.pwaModal.closeBtn}
+        </button>
+      </div>
+    </div>
+
+    <!-- Accessible Toast Notification Banner -->
+    <div
+      id="global-toast"
+      role="status"
+      aria-live="polite"
+      class="fixed bottom-5 right-5 z-50 max-w-md px-5 py-3.5 rounded-2xl bg-[#2C3527] text-[#FAF9F0] dark:bg-[#D9D28B] dark:text-[#181D16] border-2 border-[#8E9162] shadow-2xl font-bold text-sm sm:text-base transition-all duration-300 opacity-0 translate-y-4 pointer-events-none"
+    >
+      <span id="global-toast-text"></span>
+    </div>
+
+    <script>
+      // Global Toast Handler
+      let toastTimeout: number | null = null;
+      window.addEventListener('app-toast', (e: Event) => {
+        const detail = (e as CustomEvent).detail;
+        const toast = document.getElementById('global-toast');
+        const toastText = document.getElementById('global-toast-text');
+        if (!toast || !toastText || !detail?.message) return;
+
+        toastText.textContent = detail.message;
+        toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+        toast.classList.add('opacity-100', 'translate-y-0');
+
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = window.setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+          toast.classList.remove('opacity-100', 'translate-y-0');
+        }, 4200);
+      });
+
+      // PWA Install Modal Controls
+      const pwaModal = document.getElementById('pwa-install-modal');
+      const closeIcon = document.getElementById('pwa-modal-close-icon');
+      const closeBtn = document.getElementById('pwa-modal-close-btn');
+
+      function closePwaModal() {
+        pwaModal?.classList.add('hidden');
+      }
+
+      window.addEventListener('open-pwa-modal', () => {
+        pwaModal?.classList.remove('hidden');
+      });
+
+      closeIcon?.addEventListener('click', closePwaModal);
+      closeBtn?.addEventListener('click', closePwaModal);
+      pwaModal?.addEventListener('click', (e) => {
+        if (e.target === pwaModal) closePwaModal();
+      });
+
+      // Register Offline Service Worker (/sw.js)
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .then((reg) => {
+              reg.addEventListener('updatefound', () => {
+                const newWorker = reg.installing;
+                if (!newWorker) return;
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    const msg = document.body.getAttribute('data-offline-ready-msg');
+                    if (msg) {
+                      window.dispatchEvent(new CustomEvent('app-toast', { detail: { message: msg } }));
+                    }
+                  }
+                });
+              });
+            })
+            .catch((err) => {
+              console.warn('Service worker registration skipped:', err);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>

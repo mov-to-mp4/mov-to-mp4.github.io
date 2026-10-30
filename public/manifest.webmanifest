@@ -1,0 +1,32 @@
+{
+  "name": "MOV to MP4 Converter — Instant 100% Offline Video Converter",
+  "short_name": "MOV to MP4",
+  "description": "Free 100% client-side MOV to MP4 and MP4 to MOV video converter powered by WebAssembly FFmpeg. Instant lossless stream copy (-c copy) with zero uploads.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FAF9F0",
+  "theme_color": "#6A795D",
+  "categories": ["multimedia", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

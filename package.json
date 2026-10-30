@@ -1,0 +1,21 @@
+{
+  "name": "mov-to-mp4-converter",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Free, 100% client-side MOV to MP4 and MP4 to MOV video converter powered by WebAssembly FFmpeg. Instant lossless remuxing & H.264 encoding in your browser with zero uploads.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.1.6",
+    "@astrojs/tailwind": "^5.1.2",
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/util": "^0.12.1",
+    "astro": "^4.16.18",
+    "tailwindcss": "^3.4.17"
+  }
+}

@@ -1,0 +1,1192 @@
+---
+import { type Locale, getTranslations } from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getTranslations(lang);
+---
+
+<section
+  id="converter-hero"
+  aria-label={t.hero.title}
+  class="w-full flex flex-col justify-center py-3 sm:py-5 lg:py-8 px-2.5 sm:px-4 lg:px-8"
+>
+  <div class="max-w-5xl w-full mx-auto flex flex-col gap-3 sm:gap-4 md:gap-5">
+    <!-- Hero Header Title & Subtitle (Badges removed per user request) -->
+    <div class="text-center flex flex-col items-center gap-1.5 sm:gap-2">
+      <h1 class="hero-heading text-textPrimary tracking-tight">
+        {t.hero.title}
+      </h1>
+      <p class="text-sm sm:text-base md:text-lg text-textSecondary font-medium max-w-2xl leading-snug px-2">
+        {t.hero.subtitle}
+      </p>
+    </div>
+
+    <!-- MAIN INTERACTIVE CONVERTER WORKSPACE BOX DIV -->
+    <div
+      id="converter-workspace-box"
+      class="w-full rounded-2xl sm:rounded-[2rem] bg-workspaceBg border-2 border-borderTheme shadow-workspace dark:shadow-workspaceDark p-3 sm:p-6 md:p-8 transition-all duration-300"
+      data-msg-loading={t.hero.loadingEngineStatus}
+      data-msg-remuxing={t.hero.remuxingStatus}
+      data-msg-encoding={t.hero.encodingStatus}
+      data-msg-fallback={t.hero.fallbackEncodingStatus}
+      data-msg-sample-loading={t.hero.sampleGenerating}
+      data-msg-sample-btn={t.hero.sampleBtn}
+      data-msg-download-mp4={t.hero.downloadMp4Btn}
+      data-msg-download-mov={t.hero.downloadMovBtn}
+      data-msg-lossless-badge={t.hero.losslessBadge}
+      data-msg-saved-badge={t.hero.savedBadge}
+      data-toast-sample={t.toasts.sampleLoaded}
+      data-toast-done={t.toasts.conversionComplete}
+      data-toast-fallback={t.toasts.fallbackTriggered}
+      data-toast-unsupported={t.toasts.unsupportedFile}
+    >
+      <!-- 4-Step Progress Pill Indicator Bar -->
+      <div
+        class="grid grid-cols-4 gap-1 sm:gap-2 mb-3.5 sm:mb-5 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-bgPrimary border border-borderTheme/40"
+        role="list"
+        aria-label="Conversion Steps"
+      >
+        <div
+          id="step-pill-1"
+          role="listitem"
+          class="step-indicator flex items-center justify-center gap-1 py-1.5 sm:py-2 px-1 sm:px-2 rounded-lg sm:rounded-xl font-extrabold text-[11px] sm:text-xs md:text-sm bg-btnPrimary text-btnPrimaryText shadow-sm transition-all"
+        >
+          <span class="truncate">{t.hero.step1Indicator}</span>
+        </div>
+        <div
+          id="step-pill-2"
+          role="listitem"
+          class="step-indicator flex items-center justify-center gap-1 py-1.5 sm:py-2 px-1 sm:px-2 rounded-lg sm:rounded-xl font-bold text-[11px] sm:text-xs md:text-sm text-textSecondary transition-all"
+        >
+          <span class="truncate">{t.hero.step2Indicator}</span>
+        </div>
+        <div
+          id="step-pill-3"
+          role="listitem"
+          class="step-indicator flex items-center justify-center gap-1 py-1.5 sm:py-2 px-1 sm:px-2 rounded-lg sm:rounded-xl font-bold text-[11px] sm:text-xs md:text-sm text-textSecondary transition-all"
+        >
+          <span class="truncate">{t.hero.step3Indicator}</span>
+        </div>
+        <div
+          id="step-pill-4"
+          role="listitem"
+          class="step-indicator flex items-center justify-center gap-1 py-1.5 sm:py-2 px-1 sm:px-2 rounded-lg sm:rounded-xl font-bold text-[11px] sm:text-xs md:text-sm text-textSecondary transition-all"
+        >
+          <span class="truncate">{t.hero.step4Indicator}</span>
+        </div>
+      </div>
+
+      <!-- Hidden File Input supporting .mov, .mp4, .m4v, .webm, .mkv and batch selection -->
+      <input
+        type="file"
+        id="video-file-input"
+        aria-label={t.hero.selectFilesBtn}
+        accept=".mov,.mp4,.m4v,.webm,.mkv,video/quicktime,video/mp4,video/x-m4v,video/webm,video/x-matroska,video/*"
+        multiple
+        class="sr-only"
+      />
+
+      <!-- ========================================================= -->
+      <!-- STEP 1: GIANT INTERACTIVE DROPZONE BOX                    -->
+      <!-- ========================================================= -->
+      <div id="step-1-panel" class="step-panel">
+        <div
+          id="dropzone-area"
+          role="button"
+          tabindex="0"
+          aria-label={t.hero.dropzoneTitle}
+          class="dropzone-dashed rounded-2xl sm:rounded-[1.75rem] bg-bgPrimary/70 hover:bg-bgPrimary p-4 sm:p-7 md:p-10 flex flex-col items-center justify-center text-center cursor-pointer select-none group"
+        >
+          <!-- Oversized Animated Film/Video Upload Icon (responsive 56px to 80px) -->
+          <div
+            class="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-bgSurface/80 dark:bg-bgSurface border-2 border-borderTheme flex items-center justify-center mb-3 sm:mb-5 shadow-md group-hover:scale-105 transition-transform duration-300 animate-pulseSoft"
+          >
+            <svg
+              class="w-8 h-8 sm:w-11 sm:h-11 text-[#2C3527] dark:text-[#D9D28B]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+              <polyline points="14 2 14 8 20 8" />
+              <path d="m10 11 5 3-5 3v-6Z" fill="currentColor" />
+            </svg>
+          </div>
+
+          <h2 class="text-lg sm:text-2xl md:text-3xl font-extrabold text-textPrimary mb-1 sm:mb-2 px-1 leading-snug">
+            {t.hero.dropzoneTitle}
+          </h2>
+          <p class="text-xs sm:text-base md:text-lg text-textSecondary max-w-xl mb-4 sm:mb-6 font-medium px-1">
+            {t.hero.dropzoneSubtitle}
+          </p>
+
+          <!-- Primary & Demo Action Pill Buttons (responsive column on mobile, row on tablet/desktop) -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xl">
+            <button
+              type="button"
+              id="select-files-btn"
+              aria-label={t.hero.selectFilesBtn}
+              class="w-full sm:flex-1 py-3.5 sm:py-4 px-5 sm:px-7 rounded-full bg-btnPrimary hover:bg-btnPrimaryHover text-btnPrimaryText font-extrabold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2.5 active:scale-95 shrink-0"
+            >
+              <svg
+                class="w-5 h-5 sm:w-6 sm:h-6 shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <span>{t.hero.selectFilesBtn}</span>
+            </button>
+
+            <button
+              type="button"
+              id="sample-mov-btn"
+              aria-label={t.hero.sampleBtn}
+              class="w-full sm:w-auto py-3.5 sm:py-4 px-4 sm:px-6 rounded-full bg-bgSurface hover:bg-badgeAccent text-[#2C3527] dark:text-[#D9D28B] dark:hover:text-[#181D16] border-2 border-borderTheme font-extrabold text-sm sm:text-base md:text-lg shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 active:scale-95 shrink-0"
+            >
+              <svg
+                class="w-5 h-5 sm:w-6 sm:h-6 shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" />
+              </svg>
+              <span id="sample-mov-btn-text">{t.hero.sampleBtn}</span>
+            </button>
+          </div>
+
+          <div class="mt-3.5 sm:mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-center">
+            <p class="text-[11px] sm:text-xs md:text-sm font-bold text-textSecondary/90 tracking-wide uppercase">
+              {t.hero.dropzoneFormats}
+            </p>
+            <button
+              type="button"
+              id="workspace-install-pwa-btn"
+              aria-label={t.hero.workspaceInstallBtn}
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-workspaceBg hover:bg-bgSurface/50 border border-borderTheme/70 text-xs font-extrabold text-textPrimary transition-colors"
+            >
+              <svg class="w-3.5 h-3.5 text-textSecondary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                <path d="M12 18h.01" />
+              </svg>
+              <span>{t.hero.workspaceInstallBtn}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- STEP 2: CONVERSION DIRECTION & SPEED MODE CONTROLS        -->
+      <!-- ========================================================= -->
+      <div id="step-2-panel" class="hidden step-panel flex-col gap-4 sm:gap-5">
+        <!-- Selected Files Queue Bar -->
+        <div class="rounded-2xl bg-bgPrimary border-2 border-borderTheme/60 p-3 sm:p-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2 sm:mb-3">
+            <span class="text-xs sm:text-base font-extrabold text-textPrimary uppercase tracking-wider flex items-center gap-1.5 sm:gap-2">
+              <svg
+                class="w-4 h-4 sm:w-5 sm:h-5 text-textSecondary shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="m10 9 5 3-5 3V9Z" />
+              </svg>
+              <span>{t.hero.filesSelectedLabel}</span> (<span id="queue-count-badge">1</span>)
+            </span>
+            <div class="flex items-center gap-1.5 sm:gap-2">
+              <button
+                type="button"
+                id="add-more-files-btn"
+                class="px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-xl bg-workspaceBg hover:bg-bgSurface/50 border border-borderTheme font-bold text-xs sm:text-sm text-textPrimary transition-colors"
+              >
+                {t.hero.addMoreFilesBtn}
+              </button>
+              <button
+                type="button"
+                id="clear-queue-btn"
+                class="px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-xl bg-workspaceBg hover:bg-red-500/15 border border-borderTheme font-bold text-xs sm:text-sm text-textSecondary hover:text-red-600 dark:hover:text-red-400 transition-colors"
+              >
+                {t.hero.clearQueueBtn}
+              </button>
+            </div>
+          </div>
+
+          <ul id="selected-files-list" class="flex flex-col gap-1.5 sm:gap-2 max-h-36 overflow-y-auto pr-1">
+            <!-- Dynamically populated file items -->
+          </ul>
+        </div>
+
+        <!-- Control 1: Conversion Direction Big Pill Selector -->
+        <div>
+          <label class="block text-xs sm:text-base font-extrabold text-textPrimary uppercase tracking-wider mb-2">
+            {t.hero.directionLabel}
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+            <button
+              type="button"
+              data-direction="mov-to-mp4"
+              class="direction-pill group text-left p-3 sm:p-4 rounded-2xl border-2 border-btnPrimary bg-btnPrimary/15 dark:bg-btnPrimary/20 transition-all flex items-start gap-3"
+              aria-pressed="true"
+            >
+              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-btnPrimary text-btnPrimaryText flex items-center justify-center font-extrabold text-xs sm:text-sm shrink-0 shadow-sm">
+                MP4
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-extrabold text-sm sm:text-base md:text-lg text-textPrimary flex items-center gap-2">
+                  <span>{t.hero.directionMovToMp4}</span>
+                </div>
+                <p class="text-[11px] sm:text-sm text-textSecondary leading-snug mt-0.5">
+                  {t.hero.directionMovToMp4Desc}
+                </p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              data-direction="mp4-to-mov"
+              class="direction-pill group text-left p-3 sm:p-4 rounded-2xl border-2 border-borderTheme/50 bg-bgPrimary hover:border-btnPrimary transition-all flex items-start gap-3"
+              aria-pressed="false"
+            >
+              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-bgSurface text-[#2C3527] dark:text-[#D9D28B] border border-borderTheme flex items-center justify-center font-extrabold text-xs sm:text-sm shrink-0">
+                MOV
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-extrabold text-sm sm:text-base md:text-lg text-textPrimary flex items-center gap-2">
+                  <span>{t.hero.directionMp4ToMov}</span>
+                </div>
+                <p class="text-[11px] sm:text-sm text-textSecondary leading-snug mt-0.5">
+                  {t.hero.directionMp4ToMovDesc}
+                </p>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Control 2: Processing Speed & Quality Mode Big Pill Selectors -->
+        <div>
+          <label class="block text-xs sm:text-base font-extrabold text-textPrimary uppercase tracking-wider mb-2">
+            {t.hero.modeLabel}
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+            <!-- Mode A: Instant Lossless Copy (-c copy) -->
+            <button
+              type="button"
+              data-mode="lossless"
+              class="mode-pill text-left p-3 sm:p-4 rounded-2xl border-2 border-btnPrimary bg-btnPrimary/15 dark:bg-btnPrimary/20 transition-all flex flex-col justify-between gap-1.5 sm:gap-2"
+              aria-pressed="true"
+            >
+              <div class="flex items-start justify-between gap-2 w-full">
+                <span class="font-extrabold text-sm sm:text-base md:text-lg text-textPrimary leading-tight">
+                  {t.hero.modeLossless}
+                </span>
+                <span class="shrink-0 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-extrabold bg-bgSurface text-[#2C3527] dark:text-[#D9D28B] border border-borderTheme">
+                  {t.hero.modeLosslessBadge}
+                </span>
+              </div>
+              <p class="text-[11px] sm:text-sm text-textSecondary leading-snug">
+                {t.hero.modeLosslessDesc}
+              </p>
+            </button>
+
+            <!-- Mode B: Max Compatibility (H.264 + AAC) -->
+            <button
+              type="button"
+              data-mode="compat"
+              class="mode-pill text-left p-3 sm:p-4 rounded-2xl border-2 border-borderTheme/50 bg-bgPrimary hover:border-btnPrimary transition-all flex flex-col justify-between gap-1.5 sm:gap-2"
+              aria-pressed="false"
+            >
+              <div class="flex items-start justify-between gap-2 w-full">
+                <span class="font-extrabold text-sm sm:text-base md:text-lg text-textPrimary leading-tight">
+                  {t.hero.modeCompat}
+                </span>
+                <span class="shrink-0 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-extrabold bg-badgeAccent/40 text-textPrimary border border-borderTheme">
+                  {t.hero.modeCompatBadge}
+                </span>
+              </div>
+              <p class="text-[11px] sm:text-sm text-textSecondary leading-snug">
+                {t.hero.modeCompatDesc}
+              </p>
+            </button>
+          </div>
+        </div>
+
+        <!-- Control 3: Resolution Scaling & Mute Audio Bar -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-3 pt-0.5">
+          <!-- Resolution Pill Group -->
+          <div class="p-3 sm:p-3.5 rounded-2xl bg-bgPrimary border border-borderTheme/60 flex flex-col justify-center">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-textSecondary mb-1.5 sm:mb-2">
+              {t.hero.resolutionLabel}
+            </span>
+            <div class="grid grid-cols-3 gap-1.5 sm:gap-2">
+              <button
+                type="button"
+                data-res="original"
+                class="res-pill py-1.5 sm:py-2 px-2 sm:px-3 rounded-xl font-extrabold text-xs sm:text-sm bg-btnPrimary text-btnPrimaryText shadow-sm transition-all"
+                aria-pressed="true"
+              >
+                {t.hero.resOriginal}
+              </button>
+              <button
+                type="button"
+                data-res="1080p"
+                class="res-pill py-1.5 sm:py-2 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm bg-workspaceBg text-textPrimary border border-borderTheme/50 hover:border-btnPrimary transition-all"
+                aria-pressed="false"
+              >
+                {t.hero.res1080p}
+              </button>
+              <button
+                type="button"
+                data-res="720p"
+                class="res-pill py-1.5 sm:py-2 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm bg-workspaceBg text-textPrimary border border-borderTheme/50 hover:border-btnPrimary transition-all"
+                aria-pressed="false"
+              >
+                {t.hero.res720p}
+              </button>
+            </div>
+          </div>
+
+          <!-- Mute Audio Toggle Switch -->
+          <label
+            for="mute-audio-checkbox"
+            class="p-3 sm:p-3.5 rounded-2xl bg-bgPrimary border border-borderTheme/60 flex items-center justify-between gap-2.5 sm:gap-3 cursor-pointer hover:border-btnPrimary transition-colors select-none"
+          >
+            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+              <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-bgSurface/70 border border-borderTheme flex items-center justify-center text-[#2C3527] dark:text-[#D9D28B] shrink-0">
+                <svg
+                  class="w-4 h-4 sm:w-5 sm:h-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <line x1="23" y1="9" x2="17" y2="15" />
+                  <line x1="17" y1="9" x2="23" y2="15" />
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <div class="font-extrabold text-xs sm:text-sm md:text-base text-textPrimary truncate">
+                  {t.hero.muteAudioLabel}
+                </div>
+                <div class="text-[11px] sm:text-xs text-textSecondary truncate">
+                  {t.hero.muteAudioDesc}
+                </div>
+              </div>
+            </div>
+            <input
+              type="checkbox"
+              id="mute-audio-checkbox"
+              class="w-5 h-5 sm:w-6 sm:h-6 accent-[#6A795D] rounded-lg cursor-pointer shrink-0"
+            />
+          </label>
+        </div>
+
+        <!-- Primary Convert CTA Button -->
+        <button
+          type="button"
+          id="start-convert-btn"
+          aria-label={t.hero.convertNowBtn}
+          class="w-full py-3.5 sm:py-5 px-6 sm:px-8 rounded-full bg-btnPrimary hover:bg-btnPrimaryHover text-btnPrimaryText font-extrabold text-lg sm:text-2xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2.5 sm:gap-3 active:scale-[0.99]"
+        >
+          <svg
+            class="w-6 h-6 sm:w-7 sm:h-7 shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+          <span>{t.hero.convertNowBtn}</span>
+        </button>
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- STEP 3: ANIMATED FILM-REEL CONVERSION PROGRESS            -->
+      <!-- ========================================================= -->
+      <div
+        id="step-3-panel"
+        aria-live="polite"
+        aria-atomic="true"
+        class="hidden step-panel py-4 sm:py-8 px-1 sm:px-6 text-center"
+      >
+        <div class="max-w-2xl mx-auto flex flex-col items-center">
+          <!-- Animated Spinning Film Reel SVG Icon (responsive 56px to 80px) -->
+          <div class="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-bgSurface/80 border-2 border-borderTheme flex items-center justify-center mb-3 sm:mb-5 shadow-md">
+            <svg
+              class="w-8 h-8 sm:w-12 sm:h-12 text-[#2C3527] dark:text-[#D9D28B] animate-spin"
+              style="animation-duration: 3s;"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="3" />
+              <line x1="12" y1="2" x2="12" y2="9" />
+              <line x1="12" y1="15" x2="12" y2="22" />
+              <line x1="2" y1="12" x2="9" y2="12" />
+              <line x1="15" y1="12" x2="22" y2="12" />
+            </svg>
+          </div>
+
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-textPrimary mb-1">
+            {t.hero.convertingTitle}
+          </h2>
+          <p
+            id="progress-stage-text"
+            aria-live="polite"
+            class="text-xs sm:text-base md:text-lg font-bold text-textSecondary mb-4 sm:mb-6"
+          >
+            {t.hero.remuxingStatus}
+          </p>
+
+          <!-- Film-Reel Progress Bar Box (#6A795D and #B2BD7E) -->
+          <div class="w-full rounded-2xl sm:rounded-3xl bg-bgPrimary border-2 border-borderTheme p-2 sm:p-3 shadow-inner mb-4 sm:mb-5">
+            <div class="film-sprocket-track h-1.5 sm:h-2 w-full mb-1 sm:mb-1.5"></div>
+            <div class="w-full h-8 sm:h-11 rounded-xl sm:rounded-2xl bg-workspaceBg overflow-hidden relative border border-borderTheme/50">
+              <div
+                id="progress-bar-fill"
+                class="film-reel-bar h-full rounded-lg sm:rounded-xl transition-all duration-200 ease-out"
+                style="width: 8%;"
+              ></div>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span
+                  id="progress-percentage-text"
+                  class="font-mono font-extrabold text-base sm:text-xl text-textPrimary drop-shadow-sm px-2.5 sm:px-3 py-0.5 rounded-full bg-workspaceBg/80"
+                >
+                  0%
+                </span>
+              </div>
+            </div>
+            <div class="film-sprocket-track h-1.5 sm:h-2 w-full mt-1 sm:mb-1.5"></div>
+          </div>
+
+          <!-- Real-Time Elapsed Timer & Current File Info -->
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-xs sm:text-base font-bold text-textSecondary w-full">
+            <div class="w-full sm:w-auto px-3.5 py-1.5 sm:py-2 rounded-xl bg-bgPrimary border border-borderTheme/60 flex items-center justify-center gap-2">
+              <span>{t.hero.currentFileLabel}:</span>
+              <span id="progress-filename" class="text-textPrimary font-mono truncate max-w-[150px] sm:max-w-[220px]">
+                video.mov
+              </span>
+            </div>
+            <div class="w-full sm:w-auto px-3.5 py-1.5 sm:py-2 rounded-xl bg-bgPrimary border border-borderTheme/60 flex items-center justify-center gap-2">
+              <span>{t.hero.elapsedTimeLabel}:</span>
+              <span id="progress-timer" class="text-textPrimary font-mono">0.0s</span>
+            </div>
+          </div>
+
+          <p class="mt-4 sm:mt-5 text-[11px] sm:text-sm text-textSecondary">
+            {t.hero.convertingSubtitle}
+          </p>
+        </div>
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- STEP 4: INSTANT VIDEO PREVIEW & DOWNLOAD                  -->
+      <!-- ========================================================= -->
+      <div id="step-4-panel" class="hidden step-panel flex-col gap-4 sm:gap-5">
+        <!-- Result Header + File Size Comparison Badge -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 pb-3 border-b border-borderTheme/40">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#6A795D] text-[#FAF9F0] flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </span>
+              <h2 class="text-lg sm:text-2xl font-extrabold text-textPrimary">
+                {t.hero.resultTitle}
+              </h2>
+            </div>
+            <p class="text-xs sm:text-base text-textSecondary mt-0.5">
+              {t.hero.resultSubtitle}
+            </p>
+          </div>
+
+          <!-- File Size & Speed Comparison Badges -->
+          <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <div class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-bgPrimary border-2 border-borderTheme/70 text-xs sm:text-sm font-bold flex items-center gap-1.5 sm:gap-2">
+              <span class="text-textSecondary">{t.hero.originalSizeLabel}:</span>
+              <span id="result-original-size" class="font-mono font-extrabold text-textPrimary">0 MB</span>
+              <span class="text-textSecondary">→</span>
+              <span class="text-textSecondary">{t.hero.convertedSizeLabel}:</span>
+              <span id="result-converted-size" class="font-mono font-extrabold text-[#6A795D] dark:text-[#B2BD7E]">0 MB</span>
+            </div>
+
+            <span
+              id="result-quality-badge"
+              class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-bgSurface text-[#2C3527] dark:text-[#D9D28B] border border-borderTheme font-extrabold text-xs sm:text-sm"
+            >
+              {t.hero.losslessBadge}
+            </span>
+
+            <span
+              id="result-time-badge"
+              class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-badgeAccent/30 text-textPrimary border border-borderTheme/50 font-mono font-bold text-xs sm:text-sm"
+            >
+              0.4s
+            </span>
+          </div>
+        </div>
+
+        <!-- Batch Output Switcher (Visible when >1 files converted) -->
+        <div id="batch-results-bar" class="hidden flex-wrap items-center gap-1.5 sm:gap-2">
+          <!-- Populated dynamically if multiple files were converted -->
+        </div>
+
+        <!-- Built-in HTML5 <video controls> Instant Preview Player -->
+        <div class="rounded-xl sm:rounded-2xl overflow-hidden bg-[#181D16] border-2 border-borderTheme shadow-lg relative">
+          <video
+            id="result-video-player"
+            aria-label={t.hero.previewVideoLabel}
+            controls
+            playsinline
+            preload="metadata"
+            class="w-full max-h-[260px] sm:max-h-[360px] md:max-h-[420px] object-contain mx-auto"
+          ></video>
+        </div>
+
+        <!-- Oversized Download MP4 & Convert Another Video Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 pt-1">
+          <a
+            id="download-primary-btn"
+            href="#"
+            download="converted.mp4"
+            aria-label={t.hero.downloadMp4Btn}
+            class="flex-1 py-3.5 sm:py-5 px-5 sm:px-8 rounded-full bg-[#6A795D] hover:bg-[#4E5B44] dark:bg-[#B2BD7E] dark:hover:bg-[#D9D28B] text-[#FAF9F0] dark:text-[#181D16] font-extrabold text-lg sm:text-2xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2.5 sm:gap-3 active:scale-[0.99] text-center"
+          >
+            <svg
+              class="w-6 h-6 sm:w-7 sm:h-7 shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            <span id="download-primary-text">{t.hero.downloadMp4Btn}</span>
+          </a>
+
+          <button
+            type="button"
+            id="download-all-btn"
+            aria-label={t.hero.downloadAllBtn}
+            class="hidden py-3 sm:py-4 px-5 sm:px-6 rounded-full bg-bgSurface hover:bg-badgeAccent text-[#2C3527] dark:text-[#D9D28B] border-2 border-borderTheme font-extrabold text-sm sm:text-lg transition-all items-center justify-center gap-2"
+          >
+            <span>{t.hero.downloadAllBtn}</span>
+          </button>
+
+          <button
+            type="button"
+            id="convert-another-btn"
+            aria-label={t.hero.convertAnotherBtn}
+            class="py-3 sm:py-4 px-5 sm:px-7 rounded-full bg-bgPrimary hover:bg-bgSurface/60 text-textPrimary border-2 border-borderTheme font-extrabold text-sm sm:text-base md:text-lg transition-all flex items-center justify-center gap-2 active:scale-95"
+          >
+            <svg
+              class="w-6 h-6 shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+            <span>{t.hero.convertAnotherBtn}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import {
+    convertSingleVideo,
+    generateSampleMovFile,
+    type ConversionDirection,
+    type ProcessingMode,
+    type ResolutionOption,
+    type ConversionResultItem,
+  } from '../utils/videoEngine';
+
+  function formatBytes(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+  }
+
+  function showToast(message: string) {
+    window.dispatchEvent(new CustomEvent('app-toast', { detail: { message } }));
+  }
+
+  function initConverterWorkspace() {
+    const box = document.getElementById('converter-workspace-box');
+    if (!box) return;
+
+    // Step Panels & Indicators
+    const stepPanels = [
+      document.getElementById('step-1-panel'),
+      document.getElementById('step-2-panel'),
+      document.getElementById('step-3-panel'),
+      document.getElementById('step-4-panel'),
+    ];
+    const stepPills = [
+      document.getElementById('step-pill-1'),
+      document.getElementById('step-pill-2'),
+      document.getElementById('step-pill-3'),
+      document.getElementById('step-pill-4'),
+    ];
+
+    // Elements
+    const fileInput = document.getElementById('video-file-input') as HTMLInputElement | null;
+    const dropzoneArea = document.getElementById('dropzone-area');
+    const selectFilesBtn = document.getElementById('select-files-btn');
+    const sampleMovBtn = document.getElementById('sample-mov-btn') as HTMLButtonElement | null;
+    const sampleMovBtnText = document.getElementById('sample-mov-btn-text');
+
+    const queueCountBadge = document.getElementById('queue-count-badge');
+    const selectedFilesList = document.getElementById('selected-files-list');
+    const addMoreFilesBtn = document.getElementById('add-more-files-btn');
+    const clearQueueBtn = document.getElementById('clear-queue-btn');
+
+    const directionPills = document.querySelectorAll<HTMLButtonElement>('.direction-pill');
+    const modePills = document.querySelectorAll<HTMLButtonElement>('.mode-pill');
+    const resPills = document.querySelectorAll<HTMLButtonElement>('.res-pill');
+    const muteAudioCheckbox = document.getElementById('mute-audio-checkbox') as HTMLInputElement | null;
+    const startConvertBtn = document.getElementById('start-convert-btn');
+
+    // Step 3 Elements
+    const progressStageText = document.getElementById('progress-stage-text');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const progressPercentageText = document.getElementById('progress-percentage-text');
+    const progressFilename = document.getElementById('progress-filename');
+    const progressTimer = document.getElementById('progress-timer');
+
+    // Step 4 Elements
+    const resultOriginalSize = document.getElementById('result-original-size');
+    const resultConvertedSize = document.getElementById('result-converted-size');
+    const resultQualityBadge = document.getElementById('result-quality-badge');
+    const resultTimeBadge = document.getElementById('result-time-badge');
+    const batchResultsBar = document.getElementById('batch-results-bar');
+    const resultVideoPlayer = document.getElementById('result-video-player') as HTMLVideoElement | null;
+    const downloadPrimaryBtn = document.getElementById('download-primary-btn') as HTMLAnchorElement | null;
+    const downloadPrimaryText = document.getElementById('download-primary-text');
+    const downloadAllBtn = document.getElementById('download-all-btn');
+    const convertAnotherBtn = document.getElementById('convert-another-btn');
+
+    // State
+    let selectedFiles: File[] = [];
+    let direction: ConversionDirection = 'mov-to-mp4';
+    let mode: ProcessingMode = 'lossless';
+    let resolution: ResolutionOption = 'original';
+    let conversionResults: ConversionResultItem[] = [];
+    let activeResultIndex = 0;
+    let timerInterval: number | null = null;
+
+    function setStep(stepNumber: 1 | 2 | 3 | 4) {
+      stepPanels.forEach((panel, idx) => {
+        if (!panel) return;
+        const isCurrent = idx + 1 === stepNumber;
+        panel.classList.toggle('hidden', !isCurrent);
+        if (idx + 1 === 2 || idx + 1 === 4) {
+          panel.classList.toggle('flex', isCurrent);
+        }
+      });
+
+      stepPills.forEach((pill, idx) => {
+        if (!pill) return;
+        const isCurrent = idx + 1 === stepNumber;
+        const isCompleted = idx + 1 < stepNumber;
+        pill.className = [
+          'step-indicator flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs sm:text-sm transition-all',
+          isCurrent
+            ? 'bg-btnPrimary text-btnPrimaryText font-extrabold shadow-sm'
+            : isCompleted
+              ? 'bg-badgeAccent/40 text-textPrimary font-bold'
+              : 'text-textSecondary font-bold',
+        ].join(' ');
+      });
+    }
+
+    function updateDirectionUI(newDir: ConversionDirection) {
+      direction = newDir;
+      directionPills.forEach((btn) => {
+        const active = btn.getAttribute('data-direction') === direction;
+        btn.setAttribute('aria-pressed', String(active));
+        btn.classList.toggle('border-btnPrimary', active);
+        btn.classList.toggle('bg-btnPrimary/15', active);
+        btn.classList.toggle('dark:bg-btnPrimary/20', active);
+        btn.classList.toggle('border-borderTheme/50', !active);
+        btn.classList.toggle('bg-bgPrimary', !active);
+      });
+    }
+
+    function updateModeUI(newMode: ProcessingMode) {
+      mode = newMode;
+      modePills.forEach((btn) => {
+        const active = btn.getAttribute('data-mode') === mode;
+        btn.setAttribute('aria-pressed', String(active));
+        btn.classList.toggle('border-btnPrimary', active);
+        btn.classList.toggle('bg-btnPrimary/15', active);
+        btn.classList.toggle('dark:bg-btnPrimary/20', active);
+        btn.classList.toggle('border-borderTheme/50', !active);
+        btn.classList.toggle('bg-bgPrimary', !active);
+      });
+    }
+
+    function updateResolutionUI(newRes: ResolutionOption) {
+      resolution = newRes;
+      resPills.forEach((btn) => {
+        const active = btn.getAttribute('data-res') === resolution;
+        btn.setAttribute('aria-pressed', String(active));
+        btn.classList.toggle('bg-btnPrimary', active);
+        btn.classList.toggle('text-btnPrimaryText', active);
+        btn.classList.toggle('font-extrabold', active);
+        btn.classList.toggle('bg-workspaceBg', !active);
+        btn.classList.toggle('text-textPrimary', !active);
+      });
+      // If scaling resolution to 1080p or 720p, automatically highlight H.264 compatibility mode
+      if (newRes !== 'original' && mode === 'lossless') {
+        updateModeUI('compat');
+      }
+    }
+
+    function renderFileQueue() {
+      if (!selectedFilesList || !queueCountBadge) return;
+      queueCountBadge.textContent = String(selectedFiles.length);
+      selectedFilesList.innerHTML = '';
+
+      selectedFiles.forEach((file, index) => {
+        const li = document.createElement('li');
+        li.className =
+          'flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl bg-workspaceBg border border-borderTheme/50';
+
+        const left = document.createElement('div');
+        left.className = 'flex items-center gap-2.5 min-w-0';
+
+        const extBadge = document.createElement('span');
+        const ext = (file.name.split('.').pop() || 'VID').toUpperCase();
+        extBadge.className =
+          'px-2 py-0.5 rounded-md text-xs font-mono font-extrabold bg-bgSurface text-[#2C3527] dark:text-[#D9D28B] shrink-0';
+        extBadge.textContent = ext;
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'font-bold text-sm sm:text-base text-textPrimary truncate';
+        nameSpan.textContent = file.name;
+
+        left.appendChild(extBadge);
+        left.appendChild(nameSpan);
+
+        const right = document.createElement('div');
+        right.className = 'flex items-center gap-2 shrink-0';
+
+        const sizeSpan = document.createElement('span');
+        sizeSpan.className = 'text-xs font-mono font-semibold text-textSecondary';
+        sizeSpan.textContent = formatBytes(file.size);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className =
+          'w-7 h-7 rounded-lg hover:bg-red-500/15 text-textSecondary hover:text-red-600 flex items-center justify-center font-bold transition-colors';
+        removeBtn.setAttribute('aria-label', `Remove ${file.name}`);
+        removeBtn.textContent = '×';
+        removeBtn.addEventListener('click', () => {
+          selectedFiles.splice(index, 1);
+          if (selectedFiles.length === 0) {
+            setStep(1);
+          } else {
+            renderFileQueue();
+          }
+        });
+
+        right.appendChild(sizeSpan);
+        right.appendChild(removeBtn);
+
+        li.appendChild(left);
+        li.appendChild(right);
+        selectedFilesList.appendChild(li);
+      });
+    }
+
+    function handleIncomingFiles(fileList: FileList | File[]) {
+      const validExts = ['mov', 'mp4', 'm4v', 'webm', 'mkv', 'qt'];
+      const incoming = Array.from(fileList).filter((f) => {
+        const ext = (f.name.split('.').pop() || '').toLowerCase();
+        return f.type.startsWith('video/') || validExts.includes(ext);
+      });
+
+      if (incoming.length === 0) {
+        showToast(box?.getAttribute('data-toast-unsupported') || 'Unsupported file format');
+        return;
+      }
+
+      selectedFiles = [...selectedFiles, ...incoming];
+
+      // Auto-select direction if first file is strictly .mp4
+      const firstExt = (selectedFiles[0].name.split('.').pop() || '').toLowerCase();
+      if (firstExt === 'mp4') {
+        updateDirectionUI('mp4-to-mov');
+      } else {
+        updateDirectionUI('mov-to-mp4');
+      }
+
+      renderFileQueue();
+      setStep(2);
+    }
+
+    // Dropzone Events
+    if (dropzoneArea && fileInput) {
+      dropzoneArea.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (target.closest('#sample-mov-btn')) return;
+        fileInput.click();
+      });
+
+      dropzoneArea.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          fileInput.click();
+        }
+      });
+
+      ['dragenter', 'dragover'].forEach((evt) => {
+        dropzoneArea.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzoneArea.classList.add('drag-active');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach((evt) => {
+        dropzoneArea.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzoneArea.classList.remove('drag-active');
+        });
+      });
+
+      dropzoneArea.addEventListener('drop', (e) => {
+        const dt = (e as DragEvent).dataTransfer;
+        if (dt && dt.files && dt.files.length > 0) {
+          handleIncomingFiles(dt.files);
+        }
+      });
+    }
+
+    if (selectFilesBtn && fileInput) {
+      selectFilesBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        fileInput.click();
+      });
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files && fileInput.files.length > 0) {
+          handleIncomingFiles(fileInput.files);
+          fileInput.value = '';
+        }
+      });
+    }
+
+    if (addMoreFilesBtn && fileInput) {
+      addMoreFilesBtn.addEventListener('click', () => fileInput.click());
+    }
+
+    if (clearQueueBtn) {
+      clearQueueBtn.addEventListener('click', () => {
+        selectedFiles = [];
+        setStep(1);
+      });
+    }
+
+    // Instant Sample MOV Demo Button
+    if (sampleMovBtn) {
+      sampleMovBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        sampleMovBtn.disabled = true;
+        if (sampleMovBtnText) {
+          sampleMovBtnText.textContent =
+            box.getAttribute('data-msg-sample-loading') || 'Creating Sample MOV...';
+        }
+        try {
+          const sampleFile = await generateSampleMovFile();
+          selectedFiles = [sampleFile];
+          updateDirectionUI('mov-to-mp4');
+          updateModeUI('lossless');
+          renderFileQueue();
+          setStep(2);
+          showToast(box.getAttribute('data-toast-sample') || 'Sample MOV video loaded!');
+        } finally {
+          sampleMovBtn.disabled = false;
+          if (sampleMovBtnText) {
+            sampleMovBtnText.textContent =
+              box.getAttribute('data-msg-sample-btn') || 'Instant Sample MOV Video';
+          }
+        }
+      });
+    }
+
+    // Pill Selectors in Step 2
+    directionPills.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const dir = btn.getAttribute('data-direction') as ConversionDirection;
+        if (dir) updateDirectionUI(dir);
+      });
+    });
+
+    modePills.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const m = btn.getAttribute('data-mode') as ProcessingMode;
+        if (m) updateModeUI(m);
+      });
+    });
+
+    resPills.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const r = btn.getAttribute('data-res') as ResolutionOption;
+        if (r) updateResolutionUI(r);
+      });
+    });
+
+    function displayResultItem(index: number) {
+      const item = conversionResults[index];
+      if (!item) return;
+      activeResultIndex = index;
+
+      if (resultOriginalSize) resultOriginalSize.textContent = formatBytes(item.originalSize);
+      if (resultConvertedSize) resultConvertedSize.textContent = formatBytes(item.convertedSize);
+      if (resultTimeBadge) {
+        resultTimeBadge.textContent = `${(item.durationMs / 1000).toFixed(2)}s`;
+      }
+      if (resultQualityBadge) {
+        resultQualityBadge.textContent =
+          item.modeUsed === 'lossless'
+            ? box?.getAttribute('data-msg-lossless-badge') || '100% Bit-Exact Lossless'
+            : box?.getAttribute('data-msg-saved-badge') || 'H.264 Optimized';
+      }
+
+      if (resultVideoPlayer) {
+        resultVideoPlayer.src = item.outputUrl;
+        resultVideoPlayer.load();
+      }
+
+      if (downloadPrimaryBtn && downloadPrimaryText) {
+        downloadPrimaryBtn.href = item.outputUrl;
+        downloadPrimaryBtn.download = item.outputFileName;
+        const baseBtnLabel =
+          direction === 'mov-to-mp4'
+            ? box?.getAttribute('data-msg-download-mp4') || 'Download MP4'
+            : box?.getAttribute('data-msg-download-mov') || 'Download MOV';
+        downloadPrimaryText.textContent = `${baseBtnLabel} (${item.outputFileName})`;
+      }
+
+      if (batchResultsBar) {
+        if (conversionResults.length > 1) {
+          batchResultsBar.classList.remove('hidden');
+          batchResultsBar.classList.add('flex');
+          batchResultsBar.innerHTML = '';
+          conversionResults.forEach((res, idx) => {
+            const pill = document.createElement('button');
+            pill.type = 'button';
+            pill.className = [
+              'px-3.5 py-1.5 rounded-xl font-bold text-xs sm:text-sm border transition-all',
+              idx === activeResultIndex
+                ? 'bg-btnPrimary text-btnPrimaryText border-btnPrimary'
+                : 'bg-bgPrimary text-textPrimary border-borderTheme/60 hover:border-btnPrimary',
+            ].join(' ');
+            pill.textContent = `${idx + 1}. ${res.outputFileName}`;
+            pill.addEventListener('click', () => displayResultItem(idx));
+            batchResultsBar.appendChild(pill);
+          });
+        } else {
+          batchResultsBar.classList.add('hidden');
+          batchResultsBar.classList.remove('flex');
+        }
+      }
+
+      if (downloadAllBtn) {
+        downloadAllBtn.classList.toggle('hidden', conversionResults.length <= 1);
+        downloadAllBtn.classList.toggle('flex', conversionResults.length > 1);
+      }
+    }
+
+    // Start Conversion Action (Step 2 -> Step 3 -> Step 4)
+    if (startConvertBtn) {
+      startConvertBtn.addEventListener('click', async () => {
+        if (selectedFiles.length === 0) return;
+
+        // Clean up previous blob URLs
+        conversionResults.forEach((r) => URL.revokeObjectURL(r.outputUrl));
+        conversionResults = [];
+
+        setStep(3);
+
+        const startWall = performance.now();
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = window.setInterval(() => {
+          const elapsed = ((performance.now() - startWall) / 1000).toFixed(1);
+          if (progressTimer) progressTimer.textContent = `${elapsed}s`;
+        }, 100);
+
+        const totalFiles = selectedFiles.length;
+        let anyFallback = false;
+
+        for (let i = 0; i < totalFiles; i++) {
+          const file = selectedFiles[i];
+          if (progressFilename) {
+            progressFilename.textContent =
+              totalFiles > 1 ? `(${i + 1}/${totalFiles}) ${file.name}` : file.name;
+          }
+
+          const resItem = await convertSingleVideo(
+            file,
+            {
+              direction,
+              mode,
+              resolution,
+              muteAudio: Boolean(muteAudioCheckbox?.checked),
+            },
+            {
+              onStageChange: (stage) => {
+                if (!progressStageText) return;
+                if (stage === 'loading') {
+                  progressStageText.textContent =
+                    box.getAttribute('data-msg-loading') || 'Initializing WebAssembly Engine...';
+                } else if (stage === 'remuxing') {
+                  progressStageText.textContent =
+                    box.getAttribute('data-msg-remuxing') || 'Performing Instant Lossless Remux...';
+                } else if (stage === 'encoding') {
+                  progressStageText.textContent =
+                    box.getAttribute('data-msg-encoding') || 'Transcoding H.264 Video...';
+                } else if (stage === 'fallback') {
+                  progressStageText.textContent =
+                    box.getAttribute('data-msg-fallback') || 'Switching to H.264 Compatibility...';
+                }
+              },
+              onProgress: (filePct) => {
+                const overallPct = Math.round(((i + filePct / 100) / totalFiles) * 100);
+                if (progressBarFill) progressBarFill.style.width = `${ Math.max(8, overallPct) }%`;
+                if (progressPercentageText) progressPercentageText.textContent = `${overallPct}%`;
+              },
+            }
+          );
+
+          if (resItem.usedFallback) anyFallback = true;
+          conversionResults.push(resItem);
+        }
+
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+
+        if (progressBarFill) progressBarFill.style.width = '100%';
+        if (progressPercentageText) progressPercentageText.textContent = '100%';
+
+        displayResultItem(0);
+        setStep(4);
+
+        if (anyFallback) {
+          showToast(
+            box.getAttribute('data-toast-fallback') ||
+              'Automatically transcoded with H.264 compatibility mode.'
+          );
+        } else {
+          showToast(box.getAttribute('data-toast-done') || 'Video converted locally!');
+        }
+      });
+    }
+
+    // Download All Button (for Batch Mode)
+    if (downloadAllBtn) {
+      downloadAllBtn.addEventListener('click', () => {
+        conversionResults.forEach((item, idx) => {
+          setTimeout(() => {
+            const a = document.createElement('a');
+            a.href = item.outputUrl;
+            a.download = item.outputFileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }, idx * 250);
+        });
+      });
+    }
+
+    // Convert Another Video Reset Button
+    if (convertAnotherBtn) {
+      convertAnotherBtn.addEventListener('click', () => {
+        if (resultVideoPlayer) {
+          resultVideoPlayer.pause();
+          resultVideoPlayer.removeAttribute('src');
+          resultVideoPlayer.load();
+        }
+        conversionResults.forEach((r) => URL.revokeObjectURL(r.outputUrl));
+        conversionResults = [];
+        selectedFiles = [];
+        setStep(1);
+      });
+    }
+
+    // Workspace "Add to Home Screen" button
+    const workspaceInstallBtn = document.getElementById('workspace-install-pwa-btn');
+    if (workspaceInstallBtn) {
+      workspaceInstallBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (typeof (window as any).__triggerPwaInstall === 'function') {
+          (window as any).__triggerPwaInstall();
+        } else {
+          window.dispatchEvent(new CustomEvent('open-pwa-modal'));
+        }
+      });
+    }
+  }
+
+  initConverterWorkspace();
+</script>
